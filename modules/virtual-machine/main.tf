@@ -1,5 +1,6 @@
 resource "aws_network_interface" "default" {
   subnet_id       = var.subnet_id
+  security_groups = [var.security_groups]
 }
 
 resource "aws_instance" "default" {

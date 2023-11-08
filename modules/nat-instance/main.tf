@@ -20,12 +20,12 @@ resource "aws_nat_gateway" "default" {
 resource "aws_route_table" "instance" {
   vpc_id = var.vpc_id
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.default.id
   }
 }
 
 resource "aws_route_table_association" "instance" {
-  subnet_id = var.subnet_id_route
+  subnet_id      = var.subnet_id_route
   route_table_id = aws_route_table.instance.id
 }

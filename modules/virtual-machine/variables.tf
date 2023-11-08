@@ -32,3 +32,7 @@ variable "key_pair" {
   type        = string
   description = "Disk type"
 }
+
+variable "security_groups" {
+  type = string
+}

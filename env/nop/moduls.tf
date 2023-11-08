@@ -47,16 +47,26 @@ module "key1" {
   key    = local.key1_key           # The public ssh key for the key pair
 }
 
+module "sg1" {
+  source        = "../../modules/security-group"
+  vpc_id        = module.vpc1.info.id
+  name          = local.sg1_name
+  description   = local.sg1_description
+  ingress_rules = local.sg1_ingress_rules
+  egress_rules  = local.sg1_egress_rules
+}
+
 # Use the 'virtual-machine' module to provision a Key Pair with the defined properties.
 module "vm1" {
-  source    = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
-  name      = local.vm1_name                  # The name of the Virtual Machine
-  image     = local.vm1_image                 # The image of the Virtual Machine
-  type      = local.vm1_type                  # The VM-Type of the Virtual Machine
-  disk_size = local.vm1_disk_size             # The disk size of the Virtual Machine
-  disk_type = local.vm1_disk_type             # The disk type of the Virtual Machine
-  subnet_id = module.sub1.info.id             # The subnet in which the Virtual Machine should be placed in.
-  key_pair  = local.key1_name                 # The ssh key the Virtual Machine should use.
+  source          = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
+  name            = local.vm1_name                  # The name of the Virtual Machine
+  image           = local.vm1_image                 # The image of the Virtual Machine
+  type            = local.vm1_type                  # The VM-Type of the Virtual Machine
+  disk_size       = local.vm1_disk_size             # The disk size of the Virtual Machine
+  disk_type       = local.vm1_disk_type             # The disk type of the Virtual Machine
+  subnet_id       = module.sub1.info.id             # The subnet in which the Virtual Machine should be placed in.
+  key_pair        = local.key1_name                 # The ssh key the Virtual Machine should use.
+  security_groups = module.sg1.info.id
   depends_on = [
     module.sub1, module.key1
   ]
@@ -64,15 +74,29 @@ module "vm1" {
 
 # Use the 'virtual-machine' module to provision a Key Pair with the defined properties.
 module "vm2" {
-  source    = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
-  name      = local.vm2_name                  # The name of the Virtual Machine
-  image     = local.vm2_image                 # The image of the Virtual Machine
-  type      = local.vm2_type                  # The VM-Type of the Virtual Machine
-  disk_size = local.vm2_disk_size             # The disk size of the Virtual Machine
-  disk_type = local.vm2_disk_type             # The disk type of the Virtual Machine
-  subnet_id = module.sub2.info.id             # The subnet in which the Virtual Machine should be placed in.
-  key_pair  = local.key1_name                 # The ssh key the Virtual Machine should use.
+  source          = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
+  name            = local.vm2_name                  # The name of the Virtual Machine
+  image           = local.vm2_image                 # The image of the Virtual Machine
+  type            = local.vm2_type                  # The VM-Type of the Virtual Machine
+  disk_size       = local.vm2_disk_size             # The disk size of the Virtual Machine
+  disk_type       = local.vm2_disk_type             # The disk type of the Virtual Machine
+  subnet_id       = module.sub2.info.id             # The subnet in which the Virtual Machine should be placed in.
+  key_pair        = local.key1_name                 # The ssh key the Virtual Machine should use.
+  security_groups = module.sg1.info.id
   depends_on = [
     module.sub2, module.key1
+  ]
+}
+
+module "disk1" {
+  source            = "../../modules/disks" # Relative path to the virtual-machine module.
+  name              = local.disk1_name
+  availability_zone = module.vm1.info.availability_zone
+  device_name       = local.disk1_device_name
+  size              = local.disk1_size
+  type              = local.disk1_type
+  aws_instance_id   = module.vm1.info.id
+  depends_on = [
+    module.vm1
   ]
 }

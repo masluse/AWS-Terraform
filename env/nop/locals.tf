@@ -2,12 +2,37 @@
 locals {
   # Region for the Instances and configuration that will be created
   aws_region = "us-east-1"
+
+  sg1_name        = "sg1"
+  sg1_description = "Test Security Group"
+  sg1_ingress_rules = [
+    {
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+  ]
+  sg1_egress_rules = [
+    {
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    },
+  ]
+
   # VM (Virtual Machine) configuration to specify the compute resources.
   vm1_name      = "vm-1"                  # Name identifier for the virtual machine.
   vm1_type      = "t2.nano"               # Machine type specifying a particular CPU/RAM configuration.
   vm1_image     = "ami-0fc5d935ebf8bc3bc" # OS image for the VM.
   vm1_disk_size = 8                       # Size of the VM's primary disk in GB.
   vm1_disk_type = "standard"              # Type of the VM's primary disk. (standard / gp2 / gp3 / io1 / io2 / sc1 / st1)
+
+  disk1_name        = "disk1"    # Neme identifier of the disk.
+  disk1_size        = 8          # Size of the disk in GB.
+  disk1_type        = "standard" # Type of disk. (standard / gp2 / gp3 / io1 / io2 / sc1 / st1)
+  disk1_device_name = "/dev/sdh" # The device name of the disk.
 
   # VM (Virtual Machine) configuration to specify the compute resources.
   vm2_name      = "vm-2"                  # Name identifier for the virtual machine.

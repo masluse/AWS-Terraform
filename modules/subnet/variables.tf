@@ -16,6 +16,6 @@ variable "vpc_id" {
 variable "private" {
   type        = bool
   description = "Virtual Machine type"
-  default = false
+  default     = false
 }
 
