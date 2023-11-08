@@ -54,22 +54,22 @@ To use this project, you should first customize your local configurations to spe
     }
     ```
 3. virtual-machine
-    ```
-    # Use the 'virtual-machine' module to provision a Key Pair with the defined properties.
-    module "vm1" {
-    source    = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
-    name      = local.vm1_name                  # The name of the Virtual Machine
-    image     = local.vm1_image                 # The image of the Virtual Machine
-    type      = local.vm1_type                  # The VM-Type of the Virtual Machine
-    disk_size = local.vm1_disk_size             # The disk size of the Virtual Machine
-    disk_type = local.vm1_disk_type             # The disk type of the Virtual Machine
-    subnet_id = module.sub1.info.id             # The subnet in which the Virtual Machine should be placed in.
-    key_pair  = local.key1_name                 # The ssh key the Virtual Machine should use.
-    depends_on = [
-        module.sub1, module.key1
-    ]
-    }
-    ```
+```
+# Use the 'virtual-machine' module to provision a Key Pair with the defined properties.
+module "vm1" {
+source    = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
+name      = local.vm1_name                  # The name of the Virtual Machine
+image     = local.vm1_image                 # The image of the Virtual Machine
+type      = local.vm1_type                  # The VM-Type of the Virtual Machine
+disk_size = local.vm1_disk_size             # The disk size of the Virtual Machine
+disk_type = local.vm1_disk_type             # The disk type of the Virtual Machine
+subnet_id = module.sub1.info.id             # The subnet in which the Virtual Machine should be placed in.
+key_pair  = local.key1_name                 # The ssh key the Virtual Machine should use.
+depends_on = [
+    module.sub1, module.key1
+]
+}
+```
 4. vpc
     ```
     # Use the 'vpc' module to provision a VPC with the defined properties.
