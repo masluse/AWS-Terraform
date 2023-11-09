@@ -1,125 +1,124 @@
-# Use the 'key_pair' module to provision a key pair with the defined properties.
+# Define a module for provisioning an SSH key pair.
 module "key1" {
-  source = "../../modules/key_pair" # Relative path to the key_pair module.
-  name   = local.key1_name          # The name of the key pair
-  key    = local.key1_key           # The public ssh key for the key pair
+  source = "../../modules/key_pair" # Specifies the path to the module's source code.
+  name   = local.key1_name          # Sets the key pair name from a local variable.
+  key    = local.key1_key           # Sets the public key for the key pair from a local variable.
 }
 
-# Use the 'vpc' module to provision a VPC with the defined properties.
+# Module call to create a VPC using a predefined module.
 module "vpc1" {
-  source = "../../modules/vpc" # Relative path to the vpc module.
-  name   = local.vpc1_name     # The name of the vpc
-  cidr   = local.vpc1_cidr     # The cidr of the vpc
+  source = "../../modules/vpc" # The relative file path to the source code of the 'vpc' module.
+  name   = local.vpc1_name     # The name to assign to the VPC, sourced from a local variable.
+  cidr   = local.vpc1_cidr     # The CIDR block for the VPC, sourced from a local variable.
 }
 
-# Use the 'subnet' module to provision a subnet with the defined properties.
+# Module call to create a subnet that is configured to be public within the VPC.
 module "sub1" {
-  source = "../../modules/subnet" # Relative path to the subnet module.
-  name   = local.sub1_name        # The name of the subnet.
-  cidr   = local.sub1_cidr        # The cidr of the subnet.
-  vpc_id = module.vpc1.info.id    # The VPC id where the subnet should be created at.
-  availability_zone = local.sub1_availability_zone
+  source            = "../../modules/subnet"       # Path to the subnet module's source code.
+  name              = local.sub1_name              # The desired name of the subnet from a local variable.
+  cidr              = local.sub1_cidr              # The CIDR block for the subnet from a local variable.
+  vpc_id            = module.vpc1.info.id          # The ID of the VPC in which to create the subnet, referenced from the 'vpc1' module.
+  availability_zone = local.sub1_availability_zone # The availability zone to host the subnet, sourced from a local variable.
   depends_on = [
-    module.vpc1
+    module.vpc1 # Ensures this subnet is created after the VPC is available.
   ]
 }
 
-# Use the 'subnet' module to provision a subnet with the defined properties.
+# Module call to create a subnet that is configured to be private within the VPC.
 module "sub2" {
-  source  = "../../modules/subnet" # Relative path to the subnet module.
-  name    = local.sub2_name        # The name of the subnet.
-  cidr    = local.sub2_cidr        # The cidr of the subnet.
-  vpc_id  = module.vpc1.info.id    # The VPC id where the subnet should be created at.
-  private = true                   # Boolean that the subnet should be private (default is false).
-  availability_zone = local.sub2_availability_zone
+  source            = "../../modules/subnet"       # The path to the subnet module's source code.
+  name              = local.sub2_name              # The desired name for the subnet, sourced from a local variable.
+  cidr              = local.sub2_cidr              # The CIDR block to be used for the subnet, sourced from a local variable.
+  vpc_id            = module.vpc1.info.id          # The ID of the VPC (created by the 'vpc1' module) where the subnet will reside.
+  private           = true                         # Explicitly specifies that the subnet is private.
+  availability_zone = local.sub2_availability_zone # The availability zone to host the subnet, sourced from a local variable.
   depends_on = [
-    module.vpc1
+    module.vpc1 # Ensures this subnet is created after the VPC is available.
   ]
 }
 
-# Use the 'subnet' module to provision a subnet with the defined properties.
+# Establishes subnets within the VPC, can be pulic or private.
 module "sub3" {
-  source  = "../../modules/subnet" # Relative path to the subnet module.
-  name    = local.sub3_name        # The name of the subnet.
-  cidr    = local.sub3_cidr        # The cidr of the subnet.
-  vpc_id  = module.vpc1.info.id    # The VPC id where the subnet should be created at.
-  private = true                   # Boolean that the subnet should be private (default is false).
-  availability_zone = local.sub3_availability_zone
+  source            = "../../modules/subnet"       # The path to the subnet module's source code.
+  name              = local.sub3_name              # The desired name for the subnet, sourced from a local variable.
+  cidr              = local.sub3_cidr              # The CIDR block to be used for the subnet, sourced from a local variable.
+  vpc_id            = module.vpc1.info.id          # The ID of the VPC (created by the 'vpc1' module) where the subnet will reside.
+  private           = true                         # Explicitly specifies that the subnet is private.
+  availability_zone = local.sub3_availability_zone # The availability zone to host the subnet, sourced from a local variable.
   depends_on = [
-    module.vpc1
+    module.vpc1 # Ensures this subnet is created after the VPC is available.
   ]
 }
 
+# Initializes a module for creating a security group within the specified VPC.
 module "sg1" {
-  source        = "../../modules/security-group"
-  vpc_id        = module.vpc1.info.id
-  name          = local.sg1_name
-  description   = local.sg1_description
-  ingress_rules = local.sg1_ingress_rules
-  egress_rules  = local.sg1_egress_rules
+  source        = "../../modules/security-group" # The path to the security group module's source code.
+  vpc_id        = module.vpc1.info.id            # The ID of the VPC where the security group will be created.
+  name          = local.sg1_name                 # The name for the security group, sourced from a local variable.
+  description   = local.sg1_description          # The description for the security group, sourced from a local variable.
+  ingress_rules = local.sg1_ingress_rules        # The ingress rules for the security group, sourced from a local variable.
+  egress_rules  = local.sg1_egress_rules         # The egress rules for the security group, sourced from a local variable.
 }
 
+
+# Initializes a module for creating a security group within the specified VPC.
 module "sg2" {
-  source        = "../../modules/security-group"
-  vpc_id        = module.vpc1.info.id
-  name          = local.sg2_name
-  description   = local.sg2_description
-  ingress_rules = local.sg2_ingress_rules
-  egress_rules  = local.sg2_egress_rules
+  source        = "../../modules/security-group" # The path to the security group module's source code.
+  vpc_id        = module.vpc1.info.id            # The ID of the VPC where the security group will be created.
+  name          = local.sg2_name                 # The name for the security group, sourced from a local variable.
+  description   = local.sg2_description          # The description for the security group, sourced from a local variable.
+  ingress_rules = local.sg2_ingress_rules        # The ingress rules for the security group, sourced from a local variable.
+  egress_rules  = local.sg2_egress_rules         # The egress rules for the security group, sourced from a local variable.
 }
 
-resource "aws_db_subnet_group" "private" {
-  name       = "db_subnet_group"
-  subnet_ids = [module.sub2.info.id, module.sub3.info.id]
-  depends_on = [ module.sub2, module.sub3 ]
-}
-
+# Initializes a module for creating an RDS instance with specified parameters.
 module "rds1" {
-  source                 = "../../modules/rds"
-  storage                = local.rds1_storage
-  db_name                = local.rds1_db_name
-  engine                 = local.rds1_engine
-  engine_version         = local.rds1_engine_version
-  instance_class         = local.rds1_instance_class
-  username               = local.rds1_username
-  password               = local.rds1_password
-  vpc_security_group_ids = module.sg2.info.id
-  db_subnet_group_name   = aws_db_subnet_group.private.name
-  depends_on = [ aws_db_subnet_group.private ]
+  source                 = "../../modules/rds"                        # The path to the RDS module's source code.
+  storage                = local.rds1_storage                         # The allocated storage for the RDS instance.
+  db_name                = local.rds1_db_name                         # The database name for the RDS instance.
+  engine                 = local.rds1_engine                          # The database engine (e.g., MySQL, PostgreSQL).
+  engine_version         = local.rds1_engine_version                  # The version of the database engine.
+  instance_class         = local.rds1_instance_class                  # The class of RDS instance (determines compute and memory capacity).
+  username               = local.rds1_username                        # The master username for the RDS instance.
+  password               = local.rds1_password                        # The master password for the RDS instance.
+  vpc_security_group_ids = module.sg2.info.id                         # The ID of the security group associated with the RDS instance.
+  subnet_ids             = [module.sub2.info.id, module.sub3.info.id] # The IDs of the subnets for the RDS instance.
+  depends_on             = [module.sub2, module.sub3]                 # Ensures the subnet group is created after the specified subnets.
 }
 
+# This module invocation creates a virtual machine instance with specified configurations.
 module "vm1" {
-  source          = "../../modules/virtual-machine" # Relative path to the virtual-machine module.
-  name            = local.vm1_name                  # The name of the Virtual Machine
-  image           = local.vm1_image                 # The image of the Virtual Machine
-  type            = local.vm1_type                  # The VM-Type of the Virtual Machine
-  disk_size       = local.vm1_disk_size             # The disk size of the Virtual Machine
-  disk_type       = local.vm1_disk_type             # The disk type of the Virtual Machine
-  subnet_id       = module.sub1.info.id             # The subnet in which the Virtual Machine should be placed in.
-  key_pair        = local.key1_name                 # The ssh key the Virtual Machine should use.
-  security_groups = module.sg1.info.id
-  ssh_user = local.vm1_ssh_user
-  depends_on = [
-    module.sub1, module.key1
-  ]
+  source          = "../../modules/virtual-machine" # Module source path
+  name            = local.vm1_name                  # VM instance name
+  image           = local.vm1_image                 # VM image ID or name
+  type            = local.vm1_type                  # VM instance type (e.g., t2.micro)
+  disk_size       = local.vm1_disk_size             # Root disk size in GB
+  disk_type       = local.vm1_disk_type             # Root disk type (e.g., gp2, io1)
+  subnet_id       = module.sub1.info.id             # Subnet ID where the VM is to be placed
+  key_pair        = local.key1_name                 # Key pair for SSH access
+  security_groups = module.sg1.info.id              # Security group IDs for the VM
+  ssh_user        = local.vm1_ssh_user              # Default SSH user
+  depends_on      = [module.sub1, module.key1]      # Ensures VM is created after the subnet and key pair
 }
 
 
+# This module is used to run Ansible playbooks against a provisioned VM for configuration management.
+module "ansible1" {
+  source           = "../../modules/ansible"              # Location of the Ansible module
+  path_to_script   = "../../scripts/ansible/jokes-db.yaml" # Path to the Ansible playbook file
+  public_ip        = module.vm1.info.public_ip            # The public IP address of the provisioned VM
+  private_key_path = local.private_key_path               # The path to the SSH private key for Ansible to use
+  ansible_extra_vars = {                                  # Extra variables to pass to Ansible
+    username = local.rds1_username,                       # Username for RDS instance
+    password = local.rds1_password,                       # Password for RDS instance
+    endpoint = module.rds1.info.address,                  # Endpoint address for RDS instance
+    port     = module.rds1.info.port                      # Port number for RDS instance
+  }
+  depends_on = [module.vm1, module.rds1] # Ensures Ansible runs after VM and RDS are provisioned
+}
+
+# Outputs the web address for the deployed virtual machine.
 output "web_address" {
   description = "The public address of the web server"
-  value       = "http://" + module.vm1.info.public_ip + ":8080"
-}
-
-module "ansible1" {
-  source = "../../modules/ansible"
-  path_to_script = "../../scripts/ansible/ansible.yaml"
-  public_ip = module.vm1.info.public_ip
-  private_key_path = local.private_key_path
-  ansible_extra_vars = {
-  username = local.rds1_username,
-  password = local.rds1_password,
-  endpoint = module.rds1.info.address,
-  port = module.rds1.info.port
-  }
-  depends_on = [ module.vm1, module.rds1 ]
+  value       = "http://${module.vm1.info.public_ip}:8080"
 }

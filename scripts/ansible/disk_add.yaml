@@ -1,0 +1,41 @@
+---
+- name: "Setup {{ name }} storage"
+  hosts: all
+  remote_user: ubuntu
+  become: yes  # Benötigt Administratorrechte
+
+  tasks:
+
+    - name: Pause for 20 seconds
+      ansible.builtin.pause:
+        seconds: 20
+
+    - name: "Create a physical volume"
+      community.general.lvg:
+        pvs: "{{ pvs }}"
+        vg: "vg_{{ name }}"
+
+    - name: "Create a logical volume with all available space"
+      community.general.lvol:
+        vg: "vg_{{ name }}"
+        lv: "lv_{{ name }}"
+        size: 100%FREE
+
+    - name: "Create a filesystem on the logical volume"
+      community.general.filesystem:
+        fstype: xfs
+        dev: "/dev/vg_{{ name }}/lv_{{ name }}"
+        opts: "-L {{ name }}"
+
+    - name: "Create mount point"
+      ansible.builtin.file:
+        path: "/mnt/{{ name }}"
+        state: directory
+
+    - name: "Add filesystem to fstab and mount"
+      ansible.posix.mount:
+        path: "/mnt/{{ name }}"
+        src: "LABEL={{ name }}"
+        fstype: xfs
+        opts: defaults
+        state: mounted

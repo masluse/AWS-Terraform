@@ -4,23 +4,13 @@ locals {
   aws_region = "us-east-1"
 
   # VPC (Virtual Private Cloud) configuration.
-  vpc1_name = "main-vpc"      # Name identifier of the VPC.
+  vpc1_name = "drive-vpc"      # Name identifier of the VPC.
   vpc1_cidr = "172.16.0.0/16" # Subnet of the whole VPC.
 
   # Subnet configuration.
-  sub1_name              = "public-sub-1"  # Name identifier of the subnet.
+  sub1_name              = "public-drive-sub-1"  # Name identifier of the subnet.
   sub1_cidr              = "172.16.0.0/24" # Cidr of the subnet.
   sub1_availability_zone = "us-east-1a"
-
-  # Subnet configuration.
-  sub2_name              = "private-sub-1" # Name identifier of the subnet.
-  sub2_cidr              = "172.16.1.0/24" # Cidr of the subnet.
-  sub2_availability_zone = "us-east-1b"
-
-  # Subnet configuration.
-  sub3_name              = "private-sub-2" # Name identifier of the subnet.
-  sub3_cidr              = "172.16.2.0/24" # Cidr of the subnet.
-  sub3_availability_zone = "us-east-1c"
 
   sg1_name        = "Application Server"
   sg1_description = "Application Server"
@@ -28,12 +18,6 @@ locals {
     {
       from_port   = 22
       to_port     = 22
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-    {
-      from_port   = 8080
-      to_port     = 8080
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
     },
@@ -47,32 +31,10 @@ locals {
     },
   ]
 
-  sg2_name        = "DB Server"
-  sg2_description = "DB Server"
-  sg2_ingress_rules = [
-    {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-  ]
-  sg2_egress_rules = [
-    {
-      from_port   = 0
-      to_port     = 65535
-      protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-    },
-  ]
-
-  rds1_engine         = "mariadb"
-  rds1_engine_version = "10.6.14"
-  rds1_instance_class = "db.t2.micro"
-  rds1_password       = "mypassword"
-  rds1_storage        = 20
-  rds1_username       = "admin"
-  rds1_db_name        = "jokedb"
+  disk1_name        = "disk1"    # Neme identifier of the disk.
+  disk1_size        = 8          # Size of the disk in GB.
+  disk1_type        = "standard" # Type of disk. (standard / gp2 / gp3 / io1 / io2 / sc1 / st1)
+  disk1_device_name = "/dev/xvdf" # The device name of the disk.
 
   vm1_disk_size    = 8
   vm1_disk_type    = "standard"
