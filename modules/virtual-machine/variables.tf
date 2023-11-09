@@ -36,3 +36,8 @@ variable "key_pair" {
 variable "security_groups" {
   type = string
 }
+
+variable "ssh_user" {
+  type        = string
+  description = "Disk type"
+}

@@ -1,0 +1,30 @@
+---
+- name: Jokedb configuration
+  hosts: all
+  remote_user: ubuntu
+  become: yes
+  tasks:
+    - name: Install a list of packages
+      ansible.builtin.apt:
+        pkg:
+          - git
+          - maven
+          - openjdk-8-jdk
+        update_cache: yes
+
+    - name: Clone the repository
+      ansible.builtin.git:
+        repo: 'https://gitlab.com/bbwrl/m346-ref-card-03.git'
+        dest: '/opt/m346-ref-card-03'
+        clone: yes
+        update: yes
+
+    - name: Build the project with Maven
+      command: mvn package
+      args:
+        chdir: '/opt/m346-ref-card-03'
+
+    - name: Start the Java application
+      shell: nohup java -DDB_USERNAME="{{ username }}" -DDB_PASSWORD="{{ password }}" -DDB_URL="jdbc:mariadb://{{ endpoint }}:{{ port }}/jokedb" -jar /opt/m346-ref-card-03/target/architecture-refcard-03-0.0.1-SNAPSHOT.jar &
+      async: 10
+      poll: 0

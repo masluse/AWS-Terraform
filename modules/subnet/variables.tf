@@ -19,3 +19,7 @@ variable "private" {
   default     = false
 }
 
+variable "availability_zone" {
+  type        = string
+  description = "Virtual Machine type"
+}

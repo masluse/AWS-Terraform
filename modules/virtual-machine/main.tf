@@ -4,16 +4,18 @@ resource "aws_network_interface" "default" {
 }
 
 resource "aws_instance" "default" {
-  ami = var.image
-  instance_type = var.type
-  key_name = var.key_pair
+  ami             = var.image
+  instance_type   = var.type
+  key_name        = var.key_pair
   tags = {
     Name = var.name
   }
+
   root_block_device {
     volume_size = var.disk_size
     volume_type = var.disk_type
   }
+
   network_interface {
     network_interface_id = aws_network_interface.default.id
     device_index         = 0
