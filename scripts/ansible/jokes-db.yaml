@@ -1,8 +1,6 @@
 ---
 - name: Jokedb configuration
   hosts: all
-  remote_user: ubuntu
-  become: yes
   tasks:
     - name: Install a list of packages
       ansible.builtin.apt:

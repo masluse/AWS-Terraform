@@ -1,41 +1,42 @@
----
-- name: "Setup {{ name }} storage"
+- name: "Setup {{ mnt_name }} storage"
   hosts: all
-  remote_user: ubuntu
-  become: yes  # Benötigt Administratorrechte
 
   tasks:
+    - name: "Check if standard device name exists"
+      ansible.builtin.stat:
+        path: "{{ pvs }}"
+      register: standard_device
 
-    - name: Pause for 20 seconds
-      ansible.builtin.pause:
-        seconds: 20
+    - name: "Set device name based on existence"
+      set_fact:
+        device_name: "{{ pvs if standard_device.stat.exists else pvs | regex_replace('^/dev/sd', '/dev/xvd') }}"
 
     - name: "Create a physical volume"
       community.general.lvg:
-        pvs: "{{ pvs }}"
-        vg: "vg_{{ name }}"
+        pvs: "{{ device_name }}"
+        vg: "vg_{{ mnt_name }}"
 
     - name: "Create a logical volume with all available space"
       community.general.lvol:
-        vg: "vg_{{ name }}"
-        lv: "lv_{{ name }}"
+        vg: "vg_{{ mnt_name }}"
+        lv: "lv_{{ mnt_name }}"
         size: 100%FREE
 
     - name: "Create a filesystem on the logical volume"
       community.general.filesystem:
         fstype: xfs
-        dev: "/dev/vg_{{ name }}/lv_{{ name }}"
-        opts: "-L {{ name }}"
+        dev: "/dev/vg_{{ mnt_name }}/lv_{{ mnt_name }}"
+        opts: "-L {{ mnt_name }}"
 
     - name: "Create mount point"
       ansible.builtin.file:
-        path: "/mnt/{{ name }}"
+        path: "/mnt/{{ mnt_name }}"
         state: directory
 
     - name: "Add filesystem to fstab and mount"
       ansible.posix.mount:
-        path: "/mnt/{{ name }}"
-        src: "LABEL={{ name }}"
+        path: "/mnt/{{ mnt_name }}"
+        src: "LABEL={{ mnt_name }}"
         fstype: xfs
         opts: defaults
         state: mounted

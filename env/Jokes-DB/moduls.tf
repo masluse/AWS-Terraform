@@ -52,7 +52,7 @@ module "sub3" {
 
 # Initializes a module for creating a security group within the specified VPC.
 module "sg1" {
-  source        = "../../modules/security-group" # The path to the security group module's source code.
+  source        = "../../modules/security_group" # The path to the security group module's source code.
   vpc_id        = module.vpc1.info.id            # The ID of the VPC where the security group will be created.
   name          = local.sg1_name                 # The name for the security group, sourced from a local variable.
   description   = local.sg1_description          # The description for the security group, sourced from a local variable.
@@ -63,7 +63,7 @@ module "sg1" {
 
 # Initializes a module for creating a security group within the specified VPC.
 module "sg2" {
-  source        = "../../modules/security-group" # The path to the security group module's source code.
+  source        = "../../modules/security_group" # The path to the security group module's source code.
   vpc_id        = module.vpc1.info.id            # The ID of the VPC where the security group will be created.
   name          = local.sg2_name                 # The name for the security group, sourced from a local variable.
   description   = local.sg2_description          # The description for the security group, sourced from a local variable.
@@ -88,7 +88,7 @@ module "rds1" {
 
 # This module invocation creates a virtual machine instance with specified configurations.
 module "vm1" {
-  source          = "../../modules/virtual-machine" # Module source path
+  source          = "../../modules/virtual_machine" # Module source path
   name            = local.vm1_name                  # VM instance name
   image           = local.vm1_image                 # VM image ID or name
   type            = local.vm1_type                  # VM instance type (e.g., t2.micro)

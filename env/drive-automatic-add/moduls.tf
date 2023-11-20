@@ -26,7 +26,7 @@ module "sub1" {
 
 # Initializes a module for creating a security group within the specified VPC.
 module "sg1" {
-  source        = "../../modules/security-group" # The path to the security group module's source code.
+  source        = "../../modules/security_group" # The path to the security group module's source code.
   vpc_id        = module.vpc1.info.id            # The ID of the VPC where the security group will be created.
   name          = local.sg1_name                 # The name for the security group, sourced from a local variable.
   description   = local.sg1_description          # The description for the security group, sourced from a local variable.
@@ -36,7 +36,7 @@ module "sg1" {
 
 # This module invocation creates a virtual machine instance with specified configurations.
 module "vm1" {
-  source          = "../../modules/virtual-machine" # Module source path
+  source          = "../../modules/virtual_machine" # Module source path
   name            = local.vm1_name                  # VM instance name
   image           = local.vm1_image                 # VM image ID or name
   type            = local.vm1_type                  # VM instance type (e.g., t2.micro)
@@ -50,17 +50,16 @@ module "vm1" {
 }
 
 module "disk1" {
-  source            = "../../modules/disks" # Relative path to the virtual-machine module.
-  name              = local.disk1_name
-  availability_zone = module.vm1.info.availability_zone
-  device_name       = local.disk1_device_name
-  size              = local.disk1_size
-  type              = local.disk1_type
-  aws_instance_id   = module.vm1.info.id
-  depends_on = [
-    module.vm1
-  ]
+  source            = "../../modules/disk"             # Relative path to the disks module.
+  name              = local.disk1_name                  # The name of the disk (local variable).
+  availability_zone = module.vm1.info.availability_zone # Availability zone from vm1 module.
+  device_name       = local.disk1_device_name           # Device name for the disk (local variable).
+  size              = local.disk1_size                  # Size of the disk (local variable).
+  type              = local.disk1_type                  # Type of the disk (local variable).
+  aws_instance_id   = module.vm1.info.id                # AWS instance ID from vm1 module.
+  depends_on        = [module.vm1]                      # Dependency on vm1 module completion.
 }
+
 
 # This module is used to run Ansible playbooks against a provisioned VM for configuration management.
 module "ansible1" {
@@ -69,7 +68,7 @@ module "ansible1" {
   public_ip        = module.vm1.info.public_ip            # The public IP address of the provisioned VM
   private_key_path = local.private_key_path               # The path to the SSH private key for Ansible to use
   ansible_extra_vars = {                                  # Extra variables to pass to Ansible
-    name = local.disk1_name,                       # Username for RDS instance
+    mnt_name = local.disk1_name,                       
     pvs = local.disk1_device_name
   }
   depends_on = [module.vm1, module.disk1]  # Ensures Ansible runs after VM is provisioned
@@ -79,4 +78,10 @@ module "ansible1" {
 output "IP-address" {
   description = "The public ip address of the server"
   value       = "ssh ubuntu@${module.vm1.info.public_ip}"
+}
+
+# Outputs the web address for the deployed virtual machine.
+output "device-name" {
+  description = "The public ip address of the server"
+  value       = module.disk1.attachment.device_name
 }
