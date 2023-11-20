@@ -118,7 +118,7 @@ terraform plan
 terraform apply
 ```
 ## Module Usage
-## ansible/disk_add
+### ansible/disk_add
 ``` t
 # This module is used to run Ansible playbooks against a provisioned VM for configuration management.
 module "ansible1" {
@@ -133,7 +133,7 @@ module "ansible1" {
   depends_on = [module.vm1, module.disk1]  # Ensures Ansible runs after VM is provisioned
 }
 ```
-## ansible/jokes-db
+### ansible/jokes-db
 ``` t
 # This module is used to run Ansible playbooks against a provisioned VM for configuration management.
 module "ansible1" {
@@ -150,7 +150,7 @@ module "ansible1" {
   depends_on = [module.vm1, module.rds1] # Ensures Ansible runs after VM and RDS are provisioned
 }
 ```
-## disk
+### disk
 ``` t
 module "disk1" {
   source            = "../../modules/disk"             # Relative path to the disks module.
@@ -163,7 +163,7 @@ module "disk1" {
   depends_on        = [module.vm1]                      # Dependency on vm1 module completion.
 }
 ```
-## key_pair
+### key_pair
 ``` t
 # Define a module for provisioning an SSH key pair.
 module "key1" {
@@ -172,7 +172,7 @@ module "key1" {
   key    = local.key1_key           # Sets the public key for the key pair from a local variable.
 }
 ```
-## rds
+### rds
 ``` t
 # Initializes a module for creating an RDS instance with specified parameters.
 module "rds1" {
@@ -189,7 +189,7 @@ module "rds1" {
   depends_on             = [module.sub2, module.sub3]                 # Ensures the subnet group is created after the specified subnets.
 }
 ```
-## security-group
+### security_group
 ``` t
 # Initializes a module for creating a security group within the specified VPC.
 module "sg1" {
@@ -201,7 +201,7 @@ module "sg1" {
   egress_rules  = local.sg1_egress_rules         # The egress rules for the security group, sourced from a local variable.
 }
 ```
-## subnet
+### subnet
 ``` t
 # Establishes subnets within the VPC, can be pulic or private.
 module "sub3" {
@@ -216,7 +216,7 @@ module "sub3" {
   ]
 }
 ```
-## virtual_machine
+### virtual_machine
 ``` t
 # This module invocation creates a virtual machine instance with specified configurations.
 module "vm1" {
@@ -233,7 +233,7 @@ module "vm1" {
   depends_on      = [module.sub1, module.key1]      # Ensures VM is created after the subnet and key pair
 }
 ```
-## vpc
+### vpc
 ``` t
 # Module call to create a VPC using a predefined module.
 module "vpc1" {
