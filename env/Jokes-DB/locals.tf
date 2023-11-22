@@ -30,12 +30,14 @@ locals {
       to_port     = 22
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      security_groups = []
     },
     {
       from_port   = 8080
       to_port     = 8080
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      security_groups = []
     },
   ]
   sg1_egress_rules = [
@@ -44,6 +46,7 @@ locals {
       to_port     = 65535
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      security_groups = []
     },
   ]
 
@@ -54,7 +57,8 @@ locals {
       from_port   = 3306
       to_port     = 3306
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = []
+      security_groups = ["${module.sg1.info.id}"]
     },
   ]
   sg2_egress_rules = [
@@ -63,6 +67,7 @@ locals {
       to_port     = 65535
       protocol    = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
+      security_groups = []
     },
   ]
 
@@ -79,7 +84,7 @@ locals {
   vm1_image        = "ami-0fc5d935ebf8bc3bc"
   vm1_name         = "application-server"
   vm1_type         = "t2.large"
-  private_key_path = "/root/.ssh/id_rsa"
+  private_key_path = "/home/codespace/.ssh/id_rsa"
   vm1_ssh_user     = "ubuntu"
 
   # Key pair configuration.

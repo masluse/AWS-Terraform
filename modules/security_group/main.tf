@@ -11,7 +11,8 @@ resource "aws_security_group" "default" {
       from_port   = ingress.value.from_port  # Starting port range.
       to_port     = ingress.value.to_port    # Ending port range.
       protocol    = ingress.value.protocol   # The protocol used (e.g., tcp, udp, icmp).
-      cidr_blocks = ingress.value.cidr_blocks # The CIDR blocks to allow traffic from.
+      cidr_blocks = length(ingress.value.cidr_blocks) > 0 ? ingress.value.cidr_blocks : null
+      security_groups = length(ingress.value.security_groups) > 0 ? ingress.value.security_groups : null
     }
   }
 
@@ -22,7 +23,8 @@ resource "aws_security_group" "default" {
       from_port   = egress.value.from_port   # Starting port range.
       to_port     = egress.value.to_port     # Ending port range.
       protocol    = egress.value.protocol    # The protocol used.
-      cidr_blocks = egress.value.cidr_blocks # The CIDR blocks to allow traffic to.
+      cidr_blocks = length(egress.value.cidr_blocks) > 0 ? egress.value.cidr_blocks : null
+      security_groups = length(egress.value.security_groups) > 0 ? egress.value.security_groups : null
     }
   }
 

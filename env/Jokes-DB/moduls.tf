@@ -69,6 +69,7 @@ module "sg2" {
   description   = local.sg2_description          # The description for the security group, sourced from a local variable.
   ingress_rules = local.sg2_ingress_rules        # The ingress rules for the security group, sourced from a local variable.
   egress_rules  = local.sg2_egress_rules         # The egress rules for the security group, sourced from a local variable.
+  depends_on    = [module.sg1]  
 }
 
 # Initializes a module for creating an RDS instance with specified parameters.
