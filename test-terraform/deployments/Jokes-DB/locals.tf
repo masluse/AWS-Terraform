@@ -83,7 +83,7 @@ locals {
   vm1_disk_type    = "standard"
   vm1_image        = "ami-0fc5d935ebf8bc3bc"
   vm1_name         = "application-server"
-  vm1_type         = "t2.large"
+  vm1_type         = "t2.micro"
   private_key_path = "/home/codespace/.ssh/id_rsa"
   vm1_ssh_user     = "ubuntu"
 

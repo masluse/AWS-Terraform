@@ -15,6 +15,9 @@ sudo apt-add-repository ppa:ansible/ansible -y
 sudo apt update
 sudo apt install ansible -y
 
+# Downloads the CLI based on your OS/arch and puts it in /usr/local/bin
+curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh
+infracost auth login
 
 # Install Extensions on the code server
 code --install-extension 4ops.terraform
